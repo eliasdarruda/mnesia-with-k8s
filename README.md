@@ -1,8 +1,8 @@
 # Mnesiac with Kubernetes
 
-## Finally! Mnesia with Kubernetes!
+## Finally! Distributed Mnesia with Kubernetes!
 
-This is a working example of using [Mnesiac](https://github.com/beardedeagle/mnesiac) with StatefulSet k8s configuration.
+This is a working example of using [Mnesiac](https://github.com/beardedeagle/mnesiac) clustered with [Libcluster](https://github.com/bitwalker/libcluster) using StatefulSet k8s configuration.
 
 It implements a dummy writer that just keeps adding to a counter every 5 seconds.
 
