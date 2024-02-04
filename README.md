@@ -10,6 +10,8 @@ Every pod is writing to the same counter, when you rollout to a new image, the s
 
 ## Running
 
+### You can find kubernetes manifests here [.k8s](.k8s)
+
 You need to change in [config/prod.exs](config/prod.exs) the path that is going to be used by mnesia and your StatefulSet claim.
 
 > config :test, abs_path: "/app/data/"
