@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mnesiac-cluster
+  labels:
+    cluster: mnesiac
+spec:
+  selector:
+    cluster: mnesiac
+  clusterIP: None # Headless Service for internal communication

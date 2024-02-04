@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: example
+spec:
+  serviceName: "mnesiac-cluster" # Matches Headless Service name
+  replicas: 3 # Adjust as needed
+  selector:
+    matchLabels:
+      component: example
+  persistentVolumeClaimRetentionPolicy:
+    whenScaled: Retain
+    whenDeleted: Retain
+  template:
+    metadata:
+      labels:
+        component: example
+        cluster: mnesiac
+    spec:
+      containers:
+      - name: example
+        image: mnesiac-example
+        imagePullPolicy: Never
+        env:
+          - name: ERLANG_COOKIE
+            value: "secret"
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+        ports:
+          - name: example
+            containerPort: 9090
+        volumeMounts:
+        - name: mnesia-pv-storage
+          mountPath: /app/data
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+          runAsUser: 0 # use sudo for dev mode only
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /liveness
+            port: 9090
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /readiness
+            port: 9090
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 5
+      volumes:
+      - name: mnesia-pv-storage
+        persistentVolumeClaim:
+          claimName: mnesia-pvc

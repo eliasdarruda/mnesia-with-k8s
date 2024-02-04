@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods  # Binds the "pod-reader" role for pod listing
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: default
+roleRef:
+  kind: Role
+  name: pod-reader # Role granting "list" permission for pods
+  apiGroup: rbac.authorization.k8s.io
